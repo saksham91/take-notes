@@ -1,11 +1,14 @@
-package com.example.takenotes
+package com.example.takenotes.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.takenotes.R
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
 
 
@@ -33,8 +36,12 @@ class NotesDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding.toolbar.setNavigationIcon(com.google.android.material.R.drawable.ic_arrow_back_black_24)
+        viewBinding.toolbar.setNavigationIcon(R.drawable.ic_back_navigation)
         viewBinding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
     }
 
     companion object {

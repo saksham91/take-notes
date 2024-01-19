@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.takenotes.HomeFragment"
+        android:name="com.example.takenotes.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/notesDetailFragment"
-        android:name="com.example.takenotes.NotesDetailFragment"
+        android:name="com.example.takenotes.ui.NotesDetailFragment"
         android:label="fragment_notes_detail"
         tools:layout="@layout/fragment_notes_detail" />
 

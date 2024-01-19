@@ -1,12 +1,12 @@
-package com.example.takenotes
+package com.example.takenotes.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
+import com.example.takenotes.R
 import com.example.takenotes.databinding.FragmentHomeBinding
 
 
@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             HomeFragment().apply {
                 arguments = Bundle().apply {}
             }
