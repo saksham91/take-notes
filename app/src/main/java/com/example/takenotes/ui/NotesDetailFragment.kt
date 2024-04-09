@@ -79,6 +79,8 @@ class NotesDetailFragment : Fragment() {
         val note = viewBinding.noteContents.text.toString()
         val title = viewBinding.noteTitle.text.toString()
         notesViewModel.insertNote(note, title)
+        Toast.makeText(this.context, "Note saved", Toast.LENGTH_SHORT).show()
+        findNavController().navigateUp()
     }
 
     companion object {
