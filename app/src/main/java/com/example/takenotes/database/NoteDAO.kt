@@ -1,6 +1,5 @@
 package com.example.takenotes.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.takenotes.model.Note
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDAO {
@@ -22,6 +22,6 @@ interface NoteDAO {
     suspend fun updateNote(note: Note)
 
     @Query("SELECT * FROM notes")
-    fun getAllNotes(): LiveData<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
 
 }
