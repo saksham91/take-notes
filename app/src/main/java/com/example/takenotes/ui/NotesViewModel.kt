@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.takenotes.NoteStatus
 import com.example.takenotes.database.NoteDAO
 import com.example.takenotes.database.NotesRepository
 import com.example.takenotes.model.Note
@@ -41,6 +42,14 @@ class NotesViewModel(): ViewModel() {
 
     fun getNote(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         repository.getNote(id)
+    }
+
+    fun isContentUnchanged(status: NoteStatus, oldNote: Note, changedText: String): Boolean {
+        return status == NoteStatus.EDITING_NOTE && changedText == oldNote.content
+    }
+
+    fun isTitleUnchanged(status: NoteStatus, oldNote: Note, changedText: String): Boolean {
+        return status == NoteStatus.EDITING_NOTE && changedText == oldNote.title
     }
 
 }
