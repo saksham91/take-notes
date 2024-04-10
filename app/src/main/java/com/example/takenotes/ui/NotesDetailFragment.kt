@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
+import com.example.takenotes.model.Note
 
 
 /**
@@ -61,8 +62,13 @@ class NotesDetailFragment : Fragment() {
     private fun observe() {
         notesViewModel.liveData.observe(viewLifecycleOwner) { it ->
             val note = it.find { it.id == args.noteId }
-            Log.d("NotesDetail", "observe: ${note?.content}")
+            populateContent(note)
         }
+    }
+
+    private fun populateContent(note: Note?) {
+        viewBinding.noteTitle.setText(note?.title)
+        viewBinding.noteContents.setText(note?.content)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
