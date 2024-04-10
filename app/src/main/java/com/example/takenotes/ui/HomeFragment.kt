@@ -7,20 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentHomeBinding
 import com.example.takenotes.model.Note
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -49,10 +44,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = NotesAdapter()
+        adapter = NotesAdapter(::onNoteClicked)
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     }
 
     private fun observe() {
@@ -68,5 +63,10 @@ class HomeFragment : Fragment() {
             HomeFragment().apply {
                 arguments = Bundle().apply {}
             }
+    }
+
+    private fun onNoteClicked(note: Note) {
+        val action = HomeFragmentDirections.actionHomeFragmentToNotesDetailFragment(note.id)
+        findNavController().navigate(action)
     }
 }

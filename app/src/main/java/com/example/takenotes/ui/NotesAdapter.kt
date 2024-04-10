@@ -1,22 +1,23 @@
 package com.example.takenotes.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.takenotes.R
+import com.example.takenotes.databinding.NotesItemBinding
 import com.example.takenotes.model.Note
 
-class NotesAdapter() : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+class NotesAdapter(private val onNoteClicked: (Note) -> Unit)
+    : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     private var visibleList: List<Note> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.notes_item, parent, false)
-        return ViewHolder(view)
+        val binding = NotesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -33,25 +34,17 @@ class NotesAdapter() : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-
-        private val noteTitle: TextView
-        private val noteContent: TextView
-        private val noteModified: TextView
-
-        init {
-            noteTitle = view.findViewById(R.id.note_title)
-            noteContent = view.findViewById(R.id.note_content)
-            noteModified = view.findViewById(R.id.date_view)
-        }
+    inner class ViewHolder(private val binding: NotesItemBinding):
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: Note) {
-            noteTitle.text = note.title
-            noteContent.text = note.content
-            noteModified.text = note.dateModified.toString()
-            noteModified.isSelected = true
+            binding.noteTitle.text = note.title
+            binding.noteContent.text = note.content
+            binding.dateView.text = note.dateModified.toString()
+            binding.dateView.isSelected = true
+            itemView.setOnClickListener {
+                onNoteClicked(note)
+            }
         }
-
     }
 }

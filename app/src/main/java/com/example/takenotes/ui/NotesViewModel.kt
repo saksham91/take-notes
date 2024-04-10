@@ -39,4 +39,8 @@ class NotesViewModel(): ViewModel() {
         repository.delete(note)
     }
 
+    fun getNote(id: Long) = viewModelScope.launch(Dispatchers.IO) {
+        repository.getNote(id)
+    }
+
 }

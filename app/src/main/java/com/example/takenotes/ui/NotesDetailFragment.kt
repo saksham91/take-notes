@@ -13,9 +13,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
+import com.example.takenotes.model.Note
 
 
 /**
@@ -28,6 +30,7 @@ class NotesDetailFragment : Fragment() {
     private var _viewBinding: FragmentNotesDetailBinding? = null
     private val viewBinding get() = _viewBinding!!
     private val notesViewModel: NotesViewModel by viewModels()
+    private val args: NotesDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,21 @@ class NotesDetailFragment : Fragment() {
             onOptionsItemSelected(it)
         }
         viewBinding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        if (args.noteId != 0L) {
+            observe()
+        }
+    }
+
+    private fun observe() {
+        notesViewModel.liveData.observe(viewLifecycleOwner) { it ->
+            val note = it.find { it.id == args.noteId }
+            populateContent(note)
+        }
+    }
+
+    private fun populateContent(note: Note?) {
+        viewBinding.noteTitle.setText(note?.title)
+        viewBinding.noteContents.setText(note?.content)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -79,6 +97,8 @@ class NotesDetailFragment : Fragment() {
         val note = viewBinding.noteContents.text.toString()
         val title = viewBinding.noteTitle.text.toString()
         notesViewModel.insertNote(note, title)
+        Toast.makeText(this.context, "Note saved", Toast.LENGTH_SHORT).show()
+        findNavController().navigateUp()
     }
 
     companion object {
