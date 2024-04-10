@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -23,7 +24,7 @@ import com.example.takenotes.model.Note
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), NotesAdapter.OnNoteListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -50,7 +51,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = NotesAdapter()
+        adapter = NotesAdapter(this)
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -69,5 +70,11 @@ class HomeFragment : Fragment() {
             HomeFragment().apply {
                 arguments = Bundle().apply {}
             }
+    }
+
+    override fun onNoteClick(position: Int, noteId: Long) {
+        Toast.makeText(context, "Note id: $noteId", Toast.LENGTH_SHORT).show()
+        val action = HomeFragmentDirections.actionHomeFragmentToNotesDetailFragment(noteId)
+        findNavController().navigate(action)
     }
 }

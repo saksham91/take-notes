@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
@@ -28,6 +29,7 @@ class NotesDetailFragment : Fragment() {
     private var _viewBinding: FragmentNotesDetailBinding? = null
     private val viewBinding get() = _viewBinding!!
     private val notesViewModel: NotesViewModel by viewModels()
+    private val args: NotesDetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,16 @@ class NotesDetailFragment : Fragment() {
             onOptionsItemSelected(it)
         }
         viewBinding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        if (args.noteId != 0L) {
+            observe()
+        }
+    }
+
+    private fun observe() {
+        notesViewModel.liveData.observe(viewLifecycleOwner) { it ->
+            val note = it.find { it.id == args.noteId }
+            Log.d("NotesDetail", "observe: ${note?.content}")
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
