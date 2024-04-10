@@ -9,22 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentHomeBinding
 import com.example.takenotes.model.Note
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment(), NotesAdapter.OnNoteListener {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -51,7 +44,7 @@ class HomeFragment : Fragment(), NotesAdapter.OnNoteListener {
     }
 
     private fun initRecyclerView() {
-        adapter = NotesAdapter(this)
+        adapter = NotesAdapter(::onNoteClicked)
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -72,9 +65,8 @@ class HomeFragment : Fragment(), NotesAdapter.OnNoteListener {
             }
     }
 
-    override fun onNoteClick(position: Int, noteId: Long) {
-        Toast.makeText(context, "Note id: $noteId", Toast.LENGTH_SHORT).show()
-        val action = HomeFragmentDirections.actionHomeFragmentToNotesDetailFragment(noteId)
+    private fun onNoteClicked(note: Note) {
+        val action = HomeFragmentDirections.actionHomeFragmentToNotesDetailFragment(note.id)
         findNavController().navigate(action)
     }
 }
