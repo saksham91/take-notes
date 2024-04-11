@@ -2,6 +2,7 @@ package com.example.takenotes.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,12 +21,6 @@ import com.example.takenotes.database.NotesDatabase
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
 import com.example.takenotes.model.Note
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NotesDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotesDetailFragment : Fragment() {
 
     private var _viewBinding: FragmentNotesDetailBinding? = null
@@ -47,6 +42,15 @@ class NotesDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val dao = NotesDatabase.getNotesDatabase(activity as Activity).notesDao()
         notesViewModel.initialize(dao)
+        if (args.noteId != 0L) {
+            noteStatus = NoteStatus.EDITING_NOTE
+            viewBinding.saveIcon.visibility = View.GONE
+            observe()
+        }
+        initUI()
+    }
+
+    private fun initUI() {
         viewBinding.backNavigation.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -61,9 +65,9 @@ class NotesDetailFragment : Fragment() {
                 saveNote()
             }
         }
-        if (args.noteId != 0L) {
-            viewBinding.saveIcon.visibility = View.GONE
-            observe()
+        viewBinding.deleteIcon.visibility = if (noteStatus == NoteStatus.NEW_NOTE) View.GONE else View.VISIBLE
+        viewBinding.deleteIcon.setOnClickListener {
+            deleteNote()
         }
     }
 
@@ -75,26 +79,14 @@ class NotesDetailFragment : Fragment() {
     }
 
     private fun populateContent(note: Note) {
-        noteStatus = NoteStatus.EDITING_NOTE
         viewBinding.noteTitle.setText(note.title)
         viewBinding.noteContents.setText(note.content)
     }
 
     override fun onResume() {
         super.onResume()
-        viewBinding.noteContents.doAfterTextChanged {
-            if (notesViewModel.isContentUnchanged(noteStatus, existingNote!!, it.toString())) {
-                viewBinding.saveIcon.visibility = View.GONE
-            } else {
-                viewBinding.saveIcon.visibility = View.VISIBLE
-            }
-        }
-        viewBinding.noteTitle.doAfterTextChanged {
-            if (notesViewModel.isTitleUnchanged(noteStatus, existingNote!!, it.toString())) {
-                viewBinding.saveIcon.visibility = View.GONE
-            } else {
-                viewBinding.saveIcon.visibility = View.VISIBLE
-            }
+        if (noteStatus == NoteStatus.EDITING_NOTE) {
+            textChangeListeners()
         }
     }
 
@@ -113,6 +105,31 @@ class NotesDetailFragment : Fragment() {
             Toast.makeText(this.context, "Note updated", Toast.LENGTH_SHORT).show()
         }
         findNavController().navigateUp()
+    }
+
+    private fun deleteNote() {
+        if (existingNote != null) {
+            Toast.makeText(this.context, "Note with title ${existingNote?.title} deleted", Toast.LENGTH_SHORT).show()
+            notesViewModel.deleteNote(existingNote!!)
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun textChangeListeners() {
+        viewBinding.noteContents.doAfterTextChanged {
+            if (notesViewModel.isContentUnchanged(noteStatus, existingNote!!, it.toString())) {
+                viewBinding.saveIcon.visibility = View.GONE
+            } else {
+                viewBinding.saveIcon.visibility = View.VISIBLE
+            }
+        }
+        viewBinding.noteTitle.doAfterTextChanged {
+            if (notesViewModel.isTitleUnchanged(noteStatus, existingNote!!, it.toString())) {
+                viewBinding.saveIcon.visibility = View.GONE
+            } else {
+                viewBinding.saveIcon.visibility = View.VISIBLE
+            }
+        }
     }
 
     companion object {

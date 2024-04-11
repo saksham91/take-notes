@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
 
     private fun observe() {
         notesViewModel.liveData.observe(viewLifecycleOwner) {
-            Log.d("HomeScreen", "observe: $it")
             adapter?.updateData(it)
         }
     }
