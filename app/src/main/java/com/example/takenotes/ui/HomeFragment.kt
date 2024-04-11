@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -28,7 +29,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,6 +42,7 @@ class HomeFragment : Fragment() {
         notesViewModel.initialize(dao)
         initRecyclerView()
         observe()
+        listener()
     }
 
     private fun initRecyclerView() {
@@ -54,6 +56,20 @@ class HomeFragment : Fragment() {
         notesViewModel.liveData.observe(viewLifecycleOwner) {
             adapter?.updateData(it)
         }
+    }
+
+    private fun listener() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                adapter?.filterNotes(newText)
+                return true
+            }
+
+        })
     }
 
     companion object {
