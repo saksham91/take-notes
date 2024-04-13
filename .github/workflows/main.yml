@@ -6,11 +6,13 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build_on_main:
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout
         uses: actions/checkout@v4.1.2
+        with:
+          distribution: 'oracle'
         
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
