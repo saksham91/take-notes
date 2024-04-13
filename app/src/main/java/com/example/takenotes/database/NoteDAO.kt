@@ -1,6 +1,5 @@
 package com.example.takenotes.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -24,8 +23,5 @@ interface NoteDAO {
 
     @Query("SELECT * FROM notes")
     fun getAllNotes(): Flow<List<Note>>
-
-    @Query("SELECT * FROM notes WHERE id=:id")
-    suspend fun getNote(id: Long): Note
 
 }

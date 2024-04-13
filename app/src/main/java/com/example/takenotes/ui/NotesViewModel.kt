@@ -42,10 +42,6 @@ class NotesViewModel(): ViewModel() {
         repository.delete(note)
     }
 
-    fun getNote(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getNote(id)
-    }
-
     fun isContentUnchanged(status: NoteStatus, oldNote: Note, changedText: String): Boolean {
         return status == NoteStatus.EDITING_NOTE && changedText == oldNote.content
     }
