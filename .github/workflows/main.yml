@@ -11,11 +11,11 @@ jobs:
     steps: 
       - name: Checkout
         uses: actions/checkout@v4.1.2
-        with:
-          distribution: 'oracle'
         
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'oracle'
 
       - name: Build with gradle
         run: ./gradlew build 
