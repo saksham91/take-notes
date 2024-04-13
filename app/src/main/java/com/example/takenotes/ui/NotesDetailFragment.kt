@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,8 +19,10 @@ import androidx.navigation.fragment.navArgs
 import com.example.takenotes.NoteStatus
 import com.example.takenotes.R
 import com.example.takenotes.database.NotesDatabase
+import com.example.takenotes.databinding.BottomSheetLayoutBinding
 import com.example.takenotes.databinding.FragmentNotesDetailBinding
 import com.example.takenotes.model.Note
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class NotesDetailFragment : Fragment() {
 
@@ -29,6 +32,8 @@ class NotesDetailFragment : Fragment() {
     private val args: NotesDetailFragmentArgs by navArgs()
     private var existingNote: Note? = null
     private var noteStatus = NoteStatus.NEW_NOTE
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetBinding: BottomSheetLayoutBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +52,7 @@ class NotesDetailFragment : Fragment() {
             viewBinding.saveIcon.visibility = View.GONE
             observe()
         }
+        initBottomSheet()
         initUI()
     }
 
@@ -68,6 +74,9 @@ class NotesDetailFragment : Fragment() {
         viewBinding.deleteIcon.visibility = if (noteStatus == NoteStatus.NEW_NOTE) View.GONE else View.VISIBLE
         viewBinding.deleteIcon.setOnClickListener {
             deleteNote()
+        }
+        viewBinding.bgColorChange.setOnClickListener {
+            changeBg()
         }
     }
 
@@ -130,6 +139,41 @@ class NotesDetailFragment : Fragment() {
                 viewBinding.saveIcon.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun initBottomSheet() {
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetBinding = BottomSheetLayoutBinding.inflate(LayoutInflater.from(requireContext()))
+        bottomSheetDialog.setContentView(bottomSheetBinding.root)
+    }
+
+    // TODO convert to recycler adapter
+    private fun changeBg() {
+        bottomSheetDialog.show()
+        val imageContainer = bottomSheetBinding.imagePickerView
+        imageContainer.bgBright.setOnClickListener { updateBackground(it) }
+        imageContainer.bgWave.setOnClickListener { updateBackground(it) }
+        imageContainer.bgConcentricCircle.setOnClickListener { updateBackground(it) }
+        imageContainer.bgWaveDark.setOnClickListener { updateBackground(it) }
+        imageContainer.blurryBg.setOnClickListener { updateBackground(it) }
+
+        val textContainer = bottomSheetBinding.textColorPickerView
+        textContainer.gradient1.setOnClickListener { updateTextColor(it) }
+        textContainer.gradient2.setOnClickListener { updateTextColor(it) }
+        textContainer.gradient3.setOnClickListener { updateTextColor(it) }
+        textContainer.gradient4.setOnClickListener { updateTextColor(it) }
+        textContainer.gradient5.setOnClickListener { updateTextColor(it) }
+    }
+
+    private fun updateBackground(view: View) {
+        val bg = notesViewModel.updateBgImage(view)
+        viewBinding.root.setBackgroundResource(bg)
+    }
+
+    private fun updateTextColor(view: View) {
+        val textColor = notesViewModel.updateTextColor(view)
+        viewBinding.noteContents.setTextColor(ContextCompat.getColor(requireContext(), textColor))
+        viewBinding.noteTitle.setTextColor(ContextCompat.getColor(requireContext(), textColor))
     }
 
     companion object {

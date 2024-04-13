@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_grey">#E9E9E9</color>
+    <color name="gradient1">#FFFFFF</color>
+    <color name="gradient2">#C6C6C6</color>
+    <color name="gradient3">#B0B0B0</color>
+    <color name="gradient4">#808080</color>
+    <color name="gradient5">#2B2B2B</color>
+    <color name="gradient6">#000000</color>
 </resources>
