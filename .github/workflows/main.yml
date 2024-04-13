@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_on_main:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps: 
       - name: Checkout
         uses: actions/checkout@v4.1.2
@@ -15,11 +15,11 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: '8'
+          java-version: '17'
           distribution: 'semeru'
 
       - name: Build with gradle
-        run: ./gradlew build 
+        run: ./gradlew build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.1
