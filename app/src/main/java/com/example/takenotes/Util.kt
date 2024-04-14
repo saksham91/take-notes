@@ -1,6 +1,5 @@
 package com.example.takenotes
 
-import android.content.Context
 
 object Util {
 

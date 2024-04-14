@@ -13,4 +13,10 @@ data class Note(@PrimaryKey(autoGenerate = true) val id: Long = 0L,
                 @ColumnInfo(name = "created")
                 var dateCreated: String = Date().toString(),
                 @ColumnInfo(name = "modified")
-                var dateModified: String = Date().toString())
+                var dateModified: String = Date().toString(),
+                @ColumnInfo(name = "background", defaultValue = "0")
+                var noteBg: Int,
+                @ColumnInfo(name = "text_color", defaultValue = "0")
+                var textColor: Int,
+                @ColumnInfo(name = "item_state", defaultValue = "0")
+                var noteItemState: Boolean)
