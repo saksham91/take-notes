@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.takenotes.R
 import com.example.takenotes.databinding.NotesItemBinding
@@ -55,6 +56,9 @@ class NotesAdapter(private val onNoteClicked: (Note) -> Unit)
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: Note) {
+            if (note.noteBg > 0) {
+                binding.noteContainer.setBackgroundResource(note.noteBg)
+            }
             binding.noteTitle.text = note.title
             binding.noteContent.text = note.content
             binding.dateView.text = note.dateModified.toString()
