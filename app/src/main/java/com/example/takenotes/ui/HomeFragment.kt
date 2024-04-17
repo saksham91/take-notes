@@ -54,7 +54,8 @@ class HomeFragment : Fragment() {
 
     private fun observe() {
         notesViewModel.liveData.observe(viewLifecycleOwner) {
-            adapter?.updateData(it)
+            val sortedList = it.sortedByDescending { item -> item.dateCreated }
+            adapter?.updateData(sortedList)
         }
     }
 
