@@ -1,13 +1,11 @@
 package com.example.takenotes.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -34,6 +32,9 @@ class NotesDetailFragment : Fragment() {
     private var noteStatus = NoteStatus.NEW_NOTE
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetBinding: BottomSheetLayoutBinding
+
+    private var currentBg: Int = 0
+    private var textColor: Int = Color.BLACK
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,6 +79,9 @@ class NotesDetailFragment : Fragment() {
         viewBinding.bgColorChange.setOnClickListener {
             changeBg()
         }
+        viewBinding.textSizeChange.setOnClickListener {
+            toggleListStyle()
+        }
     }
 
     private fun observe() {
@@ -90,37 +94,17 @@ class NotesDetailFragment : Fragment() {
     private fun populateContent(note: Note) {
         viewBinding.noteTitle.setText(note.title)
         viewBinding.noteContents.setText(note.content)
+        if (note.textColor > 0) {
+            viewBinding.noteContents.setTextColor(ContextCompat.getColor(requireContext(), note.textColor))
+            viewBinding.noteTitle.setTextColor(ContextCompat.getColor(requireContext(), note.textColor))
+        }
+        if (note.noteBg > 0) viewBinding.root.setBackgroundResource(note.noteBg)
     }
 
     override fun onResume() {
         super.onResume()
         if (noteStatus == NoteStatus.EDITING_NOTE) {
             textChangeListeners()
-        }
-    }
-
-    private fun saveNote() {
-        val note = viewBinding.noteContents.text.toString()
-        val title = viewBinding.noteTitle.text.toString()
-        if (noteStatus == NoteStatus.NEW_NOTE) {
-            notesViewModel.insertNote(note, title)
-            Toast.makeText(this.context, "Note saved", Toast.LENGTH_SHORT).show()
-        } else {
-            val updatedNote = Note(id = existingNote!!.id,
-                title = title,
-                content = note,
-                dateCreated = existingNote!!.dateCreated)
-            notesViewModel.updateNote(updatedNote)
-            Toast.makeText(this.context, "Note updated", Toast.LENGTH_SHORT).show()
-        }
-        findNavController().navigateUp()
-    }
-
-    private fun deleteNote() {
-        if (existingNote != null) {
-            Toast.makeText(this.context, "Note with title ${existingNote?.title} deleted", Toast.LENGTH_SHORT).show()
-            notesViewModel.deleteNote(existingNote!!)
-            findNavController().navigateUp()
         }
     }
 
@@ -149,6 +133,8 @@ class NotesDetailFragment : Fragment() {
 
     // TODO convert to recycler adapter
     private fun changeBg() {
+        bottomSheetBinding.group.visibility = View.VISIBLE
+        bottomSheetBinding.slider.visibility = View.GONE
         bottomSheetDialog.show()
         val imageContainer = bottomSheetBinding.imagePickerView
         imageContainer.bgBright.setOnClickListener { updateBackground(it) }
@@ -166,14 +152,69 @@ class NotesDetailFragment : Fragment() {
     }
 
     private fun updateBackground(view: View) {
-        val bg = notesViewModel.updateBgImage(view)
-        viewBinding.root.setBackgroundResource(bg)
+        currentBg = notesViewModel.updateBgImage(view)
+        viewBinding.saveIcon.visibility = View.VISIBLE
+        viewBinding.root.setBackgroundResource(currentBg)
     }
 
+    @SuppressLint("ResourceType")
     private fun updateTextColor(view: View) {
-        val textColor = notesViewModel.updateTextColor(view)
+        textColor = notesViewModel.updateTextColor(view)
+        viewBinding.saveIcon.visibility = View.VISIBLE
         viewBinding.noteContents.setTextColor(ContextCompat.getColor(requireContext(), textColor))
         viewBinding.noteTitle.setTextColor(ContextCompat.getColor(requireContext(), textColor))
+    }
+
+    private fun saveNote() {
+        val note = viewBinding.noteContents.text.toString()
+        val title = viewBinding.noteTitle.text.toString()
+        if (currentBg == 0) currentBg = R.drawable.blurry_background
+        if (noteStatus == NoteStatus.NEW_NOTE) {
+            val newNote = Note(title = title,
+                content = note,
+                noteBg = currentBg,
+                textColor = textColor,
+                noteItemState = false)
+            notesViewModel.insertNote(newNote)
+            Toast.makeText(this.context, "Note saved", Toast.LENGTH_SHORT).show()
+        } else {
+            val updatedNote = Note(id = existingNote!!.id,
+                title = title,
+                content = note,
+                dateCreated = existingNote!!.dateCreated,
+                noteBg = currentBg,
+                textColor = textColor,
+                noteItemState = false)
+            notesViewModel.updateNote(updatedNote)
+            Toast.makeText(this.context, "Note updated", Toast.LENGTH_SHORT).show()
+        }
+        findNavController().navigateUp()
+    }
+
+    private fun deleteNote() {
+        if (existingNote != null) {
+            Toast.makeText(this.context, "Note with title ${existingNote?.title} deleted", Toast.LENGTH_SHORT).show()
+            notesViewModel.deleteNote(existingNote!!)
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun toggleListStyle() {
+        bottomSheetBinding.group.visibility = View.GONE
+        bottomSheetBinding.slider.visibility = View.VISIBLE
+        bottomSheetDialog.show()
+        bottomSheetBinding.slider.addOnChangeListener { _, value, _ ->
+            var textSize = 14F
+            when(value) {
+                0.0F -> textSize = 10F
+                1.0F -> textSize = 12F
+                2.0F -> textSize = 14F
+                3.0F -> textSize = 16F
+                4.0F -> textSize = 18F
+                5.0F -> textSize = 20F
+            }
+            viewBinding.noteContents.textSize = textSize
+        }
     }
 
     companion object {
