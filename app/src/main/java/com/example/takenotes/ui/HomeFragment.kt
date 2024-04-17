@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = NotesAdapter(::onNoteClicked)
+        adapter = NotesAdapter(::onNoteClicked, requireContext())
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -54,7 +54,8 @@ class HomeFragment : Fragment() {
 
     private fun observe() {
         notesViewModel.liveData.observe(viewLifecycleOwner) {
-            adapter?.updateData(it)
+            val sortedList = it.sortedByDescending { item -> item.dateCreated }
+            adapter?.updateData(sortedList)
         }
     }
 
