@@ -201,8 +201,8 @@ class NotesDetailFragment : Fragment() {
         bottomSheetBinding.group.visibility = View.GONE
         bottomSheetBinding.slider.visibility = View.VISIBLE
         bottomSheetDialog.show()
-        bottomSheetBinding.slider.addOnChangeListener { slider, value, fromUser ->
-            var textSize: Float = 14F
+        bottomSheetBinding.slider.addOnChangeListener { _, value, _ ->
+            var textSize = 14F
             when(value) {
                 0.0F -> textSize = 10F
                 1.0F -> textSize = 12F

@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_bright" />
+            android:src="@drawable/bg_rain" />
 
     </androidx.cardview.widget.CardView>
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/wave_bg_dark" />
+            android:src="@drawable/bg_side_wave_b" />
 
     </androidx.cardview.widget.CardView>
 
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/concentric_bg" />
+            android:src="@drawable/bg_step" />
 
     </androidx.cardview.widget.CardView>
 

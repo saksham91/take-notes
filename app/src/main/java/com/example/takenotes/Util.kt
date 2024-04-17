@@ -6,10 +6,10 @@ object Util {
     fun getBgImageResource(bgName: Int): Int {
         var bgRes: Int? = null
         when (bgName) {
-            R.id.bg_bright -> bgRes = R.drawable.bg_bright
+            R.id.bg_bright -> bgRes = R.drawable.bg_rain
             R.id.blurry_bg -> bgRes = R.drawable.blurry_background
-            R.id.bg_concentric_circle -> bgRes = R.drawable.concentric_bg
-            R.id.bg_wave_dark -> bgRes = R.drawable.wave_bg_dark
+            R.id.bg_concentric_circle -> bgRes = R.drawable.bg_step
+            R.id.bg_wave_dark -> bgRes = R.drawable.bg_side_wave_b
             R.id.bg_wave -> bgRes = R.drawable.wave_bg
         }
         return bgRes!!
