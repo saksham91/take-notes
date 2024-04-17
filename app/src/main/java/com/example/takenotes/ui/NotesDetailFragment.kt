@@ -79,6 +79,9 @@ class NotesDetailFragment : Fragment() {
         viewBinding.bgColorChange.setOnClickListener {
             changeBg()
         }
+        viewBinding.textSizeChange.setOnClickListener {
+            toggleListStyle()
+        }
     }
 
     private fun observe() {
@@ -130,6 +133,8 @@ class NotesDetailFragment : Fragment() {
 
     // TODO convert to recycler adapter
     private fun changeBg() {
+        bottomSheetBinding.group.visibility = View.VISIBLE
+        bottomSheetBinding.slider.visibility = View.GONE
         bottomSheetDialog.show()
         val imageContainer = bottomSheetBinding.imagePickerView
         imageContainer.bgBright.setOnClickListener { updateBackground(it) }
@@ -189,6 +194,24 @@ class NotesDetailFragment : Fragment() {
             Toast.makeText(this.context, "Note with title ${existingNote?.title} deleted", Toast.LENGTH_SHORT).show()
             notesViewModel.deleteNote(existingNote!!)
             findNavController().navigateUp()
+        }
+    }
+
+    private fun toggleListStyle() {
+        bottomSheetBinding.group.visibility = View.GONE
+        bottomSheetBinding.slider.visibility = View.VISIBLE
+        bottomSheetDialog.show()
+        bottomSheetBinding.slider.addOnChangeListener { slider, value, fromUser ->
+            var textSize: Float = 14F
+            when(value) {
+                0.0F -> textSize = 10F
+                1.0F -> textSize = 12F
+                2.0F -> textSize = 14F
+                3.0F -> textSize = 16F
+                4.0F -> textSize = 18F
+                5.0F -> textSize = 20F
+            }
+            viewBinding.noteContents.textSize = textSize
         }
     }
 
