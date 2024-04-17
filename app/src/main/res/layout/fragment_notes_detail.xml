@@ -107,14 +107,6 @@
             android:padding="8dp"/>
 
         <ImageView
-            android:id="@+id/text_color_change"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_outline_brush_24"
-            android:layout_gravity="top"
-            android:padding="8dp"/>
-
-        <ImageView
             android:id="@+id/text_size_change"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
