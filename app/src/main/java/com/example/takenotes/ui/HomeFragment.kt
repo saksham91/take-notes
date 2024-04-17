@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = NotesAdapter(::onNoteClicked)
+        adapter = NotesAdapter(::onNoteClicked, requireContext())
         recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)

@@ -1,6 +1,7 @@
 package com.example.takenotes.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,17 @@ import com.example.takenotes.databinding.NotesItemBinding
 import com.example.takenotes.model.Note
 import java.util.Locale
 
-class NotesAdapter(private val onNoteClicked: (Note) -> Unit)
+class NotesAdapter(private val onNoteClicked: (Note) -> Unit,
+                   context: Context)
     : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     private var visibleList: List<Note> = emptyList()
     private var fullList: List<Note> = emptyList()
+    private var context: Context? = null
+
+    init {
+        this.context = context
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = NotesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -58,6 +65,11 @@ class NotesAdapter(private val onNoteClicked: (Note) -> Unit)
         fun bind(note: Note) {
             if (note.noteBg > 0) {
                 binding.noteContainer.setBackgroundResource(note.noteBg)
+            }
+            if (context != null && note.textColor > 0) {
+                binding.noteContent.setTextColor(ContextCompat.getColor(context!!, note.textColor))
+                binding.noteTitle.setTextColor(ContextCompat.getColor(context!!, note.textColor))
+                binding.dateView.setTextColor(ContextCompat.getColor(context!!, note.textColor))
             }
             binding.noteTitle.text = note.title
             binding.noteContent.text = note.content

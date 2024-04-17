@@ -153,12 +153,14 @@ class NotesDetailFragment : Fragment() {
 
     private fun updateBackground(view: View) {
         currentBg = notesViewModel.updateBgImage(view)
+        viewBinding.saveIcon.visibility = View.VISIBLE
         viewBinding.root.setBackgroundResource(currentBg)
     }
 
     @SuppressLint("ResourceType")
     private fun updateTextColor(view: View) {
         textColor = notesViewModel.updateTextColor(view)
+        viewBinding.saveIcon.visibility = View.VISIBLE
         viewBinding.noteContents.setTextColor(ContextCompat.getColor(requireContext(), textColor))
         viewBinding.noteTitle.setTextColor(ContextCompat.getColor(requireContext(), textColor))
     }
